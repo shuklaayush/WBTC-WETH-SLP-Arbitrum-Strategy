@@ -99,13 +99,20 @@ def deploy():
 
   deposit_amount = 50 * 10**18
 
-  # Convert ETH -> WETH
-  interface.IWETH(WETH).deposit({"value": deposit_amount, "from": deployer})
+  # Convert MATIC -> WETH
+  WMATIC = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
+  router.swapExactETHForTokens(
+      0,
+      [WMATIC, WETH],
+      deployer,
+      9999999999999999,
+      {"from": deployer, "value": deposit_amount}
+  )
 
   # Buy WBTC with path ETH -> WETH -> WBTC
   router.swapExactETHForTokens(
       0,
-      [WETH, WBTC],
+      [WMATIC, WETH, WBTC],
       deployer,
       9999999999999999,
       {"value": deposit_amount, "from": deployer}
